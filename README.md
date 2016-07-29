@@ -20,11 +20,19 @@ $ usd 20 usd
 Development
 -----------
 
-Scripts are written under Python 2.7.12 and use folloving python modules:
+Scripts are written under Python 2.7.12 and use following python modules:
 
 - requests
 - argparse
+- os
+- json
+- datetime
 
-Internet connection is required (to use PrivatBank API).
+Internet connection is required (to use PrivatBank API). Exchange rates are caching for 10 minutes to improve the speed.
 
 Any contributions, forks and advices are welcome!
+
+ToDo
+----
+
+- Interactive mode
