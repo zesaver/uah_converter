@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-import requests
-import argparse
+import requests, argparse, os, json, datetime
 
 ### GENERAL
 parser = argparse.ArgumentParser(description='UAH<>EUR converter using PrivatBank API')
@@ -10,8 +9,19 @@ parser.add_argument('curr', metavar='C', type=str, help='currency to convert fro
 
 args = parser.parse_args()
 
-resp = requests.get("https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5")
-data = resp.json()
+cache = "/tmp/currency_rates.cache"
+
+if os.path.isfile(cache):
+  dt=os.path.getmtime(cache)
+
+if os.path.isfile(cache) and (datetime.datetime.utcfromtimestamp(dt) > datetime.datetime.utcnow() - datetime.timedelta(minutes=10)):
+  with open(cache, 'r') as f:
+    data = json.load(f)
+else:
+  resp = requests.get("https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5")
+  data = resp.json()
+  with open(cache, 'w') as f:
+    json.dump(data, f)
 
 if args.curr == "eur" or args.curr == "EUR":
 	print ("%.2f" % (args.amount*float(data[2]["buy"])))," UAH"
