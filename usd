@@ -1,0 +1,21 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+import requests
+import argparse
+
+resp = requests.get("https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5")
+data = resp.json()
+
+### GENERAL
+parser = argparse.ArgumentParser(description='UAH<>USD converter using PrivatBank API')
+parser.add_argument('amount', metavar='N', type=int, help='amount of currency to convert')
+parser.add_argument('curr', metavar='C', type=str, help='currency to convert from')
+
+args = parser.parse_args()
+
+if args.curr == "usd" or args.curr == "USD":
+	print ("%.2f" % (args.amount*float(data[2]["buy"])))," UAH"
+elif args.curr == "uah" or args.curr == "UAH":
+	print ("%.2f" % (args.amount/float(data[2]["buy"])))," USD"
+else:
+	print "Allowed currencies: UAH|USD"
