@@ -3,15 +3,15 @@
 import requests
 import argparse
 
-resp = requests.get("https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5")
-data = resp.json()
-
 ### GENERAL
 parser = argparse.ArgumentParser(description='UAH<>EUR converter using PrivatBank API')
 parser.add_argument('amount', metavar='N', type=int, help='amount of currency to convert')
 parser.add_argument('curr', metavar='C', type=str, help='currency to convert from')
 
 args = parser.parse_args()
+
+resp = requests.get("https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5")
+data = resp.json()
 
 if args.curr == "eur" or args.curr == "EUR":
 	print ("%.2f" % (args.amount*float(data[2]["buy"])))," UAH"
