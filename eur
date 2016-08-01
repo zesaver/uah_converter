@@ -28,7 +28,7 @@ def get_rates():
 
 def autoconvert():
   ### Parse arguments
-  parser = argparse.ArgumentParser(description='UAH<>EUR converter using PrivatBank API')
+  parser = argparse.ArgumentParser(description='UAH<>EUR converter using PrivatBank API. Can be used either in interactive mode (without arguments) or in automatic mode (exactly two arguments required).')
   parser.add_argument('amount', metavar='N', type=float, help='amount of currency to convert')
   parser.add_argument('curr', metavar='C', type=str, help='currency to convert from')
 
