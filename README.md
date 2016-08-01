@@ -15,6 +15,13 @@ $ usd 1000 uah
 40.40  USD
 $ usd 20 usd
 495.00  UAH
+$ eur
+EUR buying rate for  2016-08-01 : 27.55  UAH
+1. EUR --> UAH
+2. UAH --> EUR
+Choose direction: 1
+Enter the sum to exchange: 100
+2755.00  UAH
 ```
 
 Development
