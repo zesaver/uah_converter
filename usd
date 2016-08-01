@@ -1,31 +1,78 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-import requests, argparse, os, json, datetime
+import requests, argparse, os, json, datetime, sys
 
-### GENERAL
-parser = argparse.ArgumentParser(description='UAH<>USD converter using PrivatBank API')
-parser.add_argument('amount', metavar='N', type=int, help='amount of currency to convert')
-parser.add_argument('curr', metavar='C', type=str, help='currency to convert from')
+def main():
+  ### Define the mode
+  if len(sys.argv) == 1:
+    interactive()
+  else:
+    autoconvert()
 
-args = parser.parse_args()
+def get_rates():
+  ### Download rates from API
+  cache = "/tmp/currency_rates.cache"
 
-cache = "/tmp/currency_rates.cache"
+  if os.path.isfile(cache):
+    dt=os.path.getmtime(cache)
 
-if os.path.isfile(cache):
-  dt=os.path.getmtime(cache)
+  if os.path.isfile(cache) and (datetime.datetime.utcfromtimestamp(dt) > datetime.datetime.utcnow() - datetime.timedelta(minutes=10)):
+    with open(cache, 'r') as f:
+      data = json.load(f)
+  else:
+    resp = requests.get("https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5")
+    data = resp.json()
+    with open(cache, 'w') as f:
+      json.dump(data, f)
+  return (data)
 
-if os.path.isfile(cache) and (datetime.datetime.utcfromtimestamp(dt) > datetime.datetime.utcnow() - datetime.timedelta(minutes=10)):
-  with open(cache, 'r') as f:
-    data = json.load(f)
-else:
-  resp = requests.get("https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5")
-  data = resp.json()
-  with open(cache, 'w') as f:
-    json.dump(data, f)
+def autoconvert():
+  ### Parse arguments
+  parser = argparse.ArgumentParser(description='UAH<>USD converter using PrivatBank API')
+  parser.add_argument('amount', metavar='N', type=float, help='amount of currency to convert')
+  parser.add_argument('curr', metavar='C', type=str, help='currency to convert from')
 
-if args.curr == "usd" or args.curr == "USD":
-  print ("%.2f" % (args.amount*float(data[2]["buy"])))," UAH"
-elif args.curr == "uah" or args.curr == "UAH":
-  print ("%.2f" % (args.amount/float(data[2]["buy"])))," USD"
-else:
-  print "Allowed currencies: UAH|USD"
+  args = parser.parse_args()
+  ### Get rates
+  data = get_rates()
+  ### Convert
+  if args.curr == "usd" or args.curr == "USD":
+    print ("%.2f" % (args.amount*float(data[2]["buy"])))," UAH"
+  elif args.curr == "uah" or args.curr == "UAH":
+    print ("%.2f" % (args.amount/float(data[2]["buy"])))," USD"
+  else:
+    print "Allowed currencies: UAH|USD"
+
+def interactive():
+  ### Get and print rates
+  data = get_rates()
+  course = round(float(data[2]["buy"]),2)
+  print "USD buying rate for ", datetime.date.today(), ":" , course,' UAH'
+
+  ### Start interactive mode
+  def is_number(str):
+      try:
+          float(str)
+          return True
+      except ValueError:
+          return False
+
+  print "1. USD --> UAH"
+  print "2. UAH --> USD"
+
+  response = None
+  while response not in ('1', '2'):
+      response = raw_input('Choose direction: ')
+
+  sum_value = ''
+  while is_number(sum_value) == False:
+      sum_value = raw_input('Enter the sum to exchange: ')
+
+  #print sum_value
+  if response == '1':
+      print ("%.2f" % (float(sum_value) * course))," UAH"
+  elif response == '2':
+      print ("%.2f" % (float(sum_value) / course))," USD"
+
+if __name__ == "__main__":
+    main()
