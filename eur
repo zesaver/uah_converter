@@ -41,13 +41,13 @@ def autoconvert():
   elif args.curr == "uah" or args.curr == "UAH":
     print ("%.2f" % (args.amount/float(data[0]["buy"])))," EUR"
   else:
-    print "Allowed currencies: UAH|EUR"
+    print("Allowed currencies: UAH|EUR")
 
 def interactive():
   ### Get and print rates
   data = get_rates()
   course = round(float(data[0]["buy"]),2)
-  print "EUR buying rate for ", datetime.date.today(), ":" , course,' UAH'
+  print("EUR buying rate for ", datetime.date.today(), ":" , course,' UAH')
 
   ### Start interactive mode
   def is_number(str):
@@ -57,8 +57,8 @@ def interactive():
       except ValueError:
           return False
 
-  print "1. EUR --> UAH"
-  print "2. UAH --> EUR"
+  print("1. EUR --> UAH")
+  print("2. UAH --> EUR")
 
   response = None
   while response not in ('1', '2'):
