@@ -37,16 +37,16 @@ def autoconvert():
   data = get_rates()
   ### Convert
   if args.curr == "eur" or args.curr == "EUR":
-    print ("%.2f" % (args.amount*float(data[0]["buy"])))," UAH"
+    print ("%.2f" % (args.amount*float(data[1]["buy"])))," UAH"
   elif args.curr == "uah" or args.curr == "UAH":
-    print ("%.2f" % (args.amount/float(data[0]["buy"])))," EUR"
+    print ("%.2f" % (args.amount/float(data[1]["buy"])))," EUR"
   else:
     print("Allowed currencies: UAH|EUR")
 
 def interactive():
   ### Get and print rates
   data = get_rates()
-  course = round(float(data[0]["buy"]),2)
+  course = round(float(data[1]["buy"]),2)
   print("EUR buying rate for ", datetime.date.today(), ":" , course,' UAH')
 
   ### Start interactive mode
