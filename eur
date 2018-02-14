@@ -13,6 +13,9 @@ def get_rates():
   ### Download rates from API
   cache = "/tmp/currency_rates.cache"
 
+  if os.path.isfile(cache):
+    dt=os.path.getmtime(cache)
+
   if os.path.isfile(cache) and (datetime.datetime.utcfromtimestamp(dt) > datetime.datetime.utcnow() - datetime.timedelta(minutes=10)):
     with open(cache, 'r') as f:
       data = json.load(f)
