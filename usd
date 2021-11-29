@@ -61,7 +61,7 @@ def autoconvert():
     # Convert
     if args.curr in ("usd", "USD"):
         print("%.2f UAH" % (args.amount*float(data[0]["buy"])))
-    if args.curr in ("uah", "UAH"):
+    elif args.curr in ("uah", "UAH"):
         print("%.2f UAD" % (args.amount/float(data[0]["sale"])))
     else:
         print("Allowed currencies: UAH|USD")
