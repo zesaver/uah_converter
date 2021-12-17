@@ -60,9 +60,9 @@ def autoconvert():
     data = get_rates()
     # Convert
     if args.curr in ("eur", "EUR"):
-        print("%.2f UAH" % (args.amount*float(data[0]["buy"])))
+        print("%.2f UAH" % (args.amount*float(data[1]["buy"])))
     elif args.curr in ("uah", "UAH"):
-        print("%.2f UAD" % (args.amount/float(data[0]["sale"])))
+        print("%.2f UAD" % (args.amount/float(data[1]["sale"])))
     else:
         print("Allowed currencies: UAH|EUR")
 
